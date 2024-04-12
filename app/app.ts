@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 import { buildSchema } from 'type-graphql';
+import { resolvers } from './modules';
 
 dotenv.config();
 async function bootstrap() {

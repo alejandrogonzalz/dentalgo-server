@@ -1,35 +1,31 @@
-// import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-// import {
-// 	CreateProductInput,
-// 	GetProductInput,
-// 	Product,
-// } from '../schema/product.schema';
-// import ProductService from '../service/product.service';
-// import Context from '../types/context';
+import {
+	Arg,
+	Args,
+	Authorized,
+	Ctx,
+	Mutation,
+	Query,
+	Resolver,
+} from 'type-graphql';
 
-// @Resolver()
-// export default class ProductResolver {
-// 	constructor(private productService: ProductService) {
-// 		this.productService = new ProductService();
-// 	}
+import { User } from '../schema/user.schema';
+import UserService from '../service/user.service';
+import { UsersPaginationArgs } from '../types/args';
+import { CreateUserInput } from '../types/inputs';
 
-// 	@Authorized()
-// 	@Mutation(() => Product)
-// 	createProduct(
-// 		@Arg('input') input: CreateProductInput,
-// 		@Ctx() context: Context
-// 	) {
-// 		const user = context.user!;
-// 		return this.productService.createProduct({ ...input, user: user?._id });
-// 	}
+@Resolver(User)
+export default class UserResolver {
+	constructor(private userService: UserService) {
+		this.userService = new UserService();
+	}
 
-// 	@Query(() => [Product])
-// 	products() {
-// 		return this.productService.findProducts();
-// 	}
+	@Mutation(() => User)
+	createUser(@Arg('input') input: CreateUserInput) {
+		return this.userService.createUser(input);
+	}
 
-// 	@Query(() => Product)
-// 	product(@Arg('input') input: GetProductInput) {
-// 		return this.productService.findSingleProduct(input);
-// 	}
-// }
+	@Query(() => [User])
+	async users(@Args() { skip, take }: UsersPaginationArgs): Promise<User[]> {
+		return await this.userService.findAll({ skip, take });
+	}
+}
